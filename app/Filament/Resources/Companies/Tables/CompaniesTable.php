@@ -46,10 +46,11 @@ class CompaniesTable
                 EditAction::make()
                 ->label('Modifica'),
             ])
+            // disabilitatat cancellazione al momento per evitare incoerenza
             ->toolbarActions([
                 BulkActionGroup::make([
-                    DeleteBulkAction::make()
-                    ->label('Elimina selezionate'),
+                    // DeleteBulkAction::make()
+                    // ->label('Elimina selezionate'),
                 ]),
             ]);
     }
