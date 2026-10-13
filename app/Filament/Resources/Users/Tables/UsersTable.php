@@ -26,8 +26,16 @@ class UsersTable
 
                 TextColumn::make('company.name')
                     ->label('Azienda')
-                    ->placeholder('Nessuna azienda')
-                    ->toggleable(),
+                    ->state(function (\App\Models\User $record): string {
+                        if ($record->hasRole('company_admin')) {
+                            return $record->managedCompanies()
+                            ->pluck('companies.name')
+                            ->implode(', ') ?: 'Nessuna azienda';
+                                }
+
+                            return $record->company?->name ?? 'Nessuna azienda';
+                            })
+                        ->toggleable(),
 
                 TextColumn::make('roles.name')
                     ->label('Ruolo')
