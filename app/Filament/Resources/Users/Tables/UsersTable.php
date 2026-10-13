@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Users\Tables;
 
+use App\Models\User;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
@@ -26,16 +27,16 @@ class UsersTable
 
                 TextColumn::make('company.name')
                     ->label('Azienda')
-                    ->state(function (\App\Models\User $record): string {
+                    ->state(function (User $record): string {
                         if ($record->hasRole('company_admin')) {
                             return $record->managedCompanies()
-                            ->pluck('companies.name')
-                            ->implode(', ') ?: 'Nessuna azienda';
-                                }
+                                ->pluck('companies.name')
+                                ->implode(', ') ?: 'Nessuna azienda';
+                        }
 
-                            return $record->company?->name ?? 'Nessuna azienda';
-                            })
-                        ->toggleable(),
+                        return $record->company?->name ?? 'Nessuna azienda';
+                    })
+                    ->toggleable(),
 
                 TextColumn::make('roles.name')
                     ->label('Ruolo')

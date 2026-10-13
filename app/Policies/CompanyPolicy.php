@@ -23,16 +23,15 @@ class CompanyPolicy
 
     public function view(User $authUser, Company $company): bool
     {
-        if ($authUser->hasRole('super_admin'))
-            {
-                return true;
-            }
+        if ($authUser->hasRole('super_admin')) {
+            return true;
+        }
 
-            return $authUser->hasRole('company_admin')
-            && $authUser->managedCompanies()
+        return $authUser->hasRole('company_admin')
+        && $authUser->managedCompanies()
             ->whereKey($company->getKey())
             ->exists()
-            && $authUser->can('View:Company');
+        && $authUser->can('View:Company');
     }
 
     public function create(User $authUser): bool
@@ -42,26 +41,24 @@ class CompanyPolicy
 
     public function update(User $authUser, Company $company): bool
     {
-            if ($authUser->hasRole('super_admin'))
-                {
-                    return true;
-                }
+        if ($authUser->hasRole('super_admin')) {
+            return true;
+        }
 
-
-                return $authUser->hasRole('company_admin')
-                && $authUser->managedCompanies()
-                ->whereKey($company->getKey())
-                ->exists()
-                && $authUser->can('Update:Company');
+        return $authUser->hasRole('company_admin')
+        && $authUser->managedCompanies()
+            ->whereKey($company->getKey())
+            ->exists()
+        && $authUser->can('Update:Company');
     }
 
     public function delete(User $authUser, Company $company): bool
     {
         // soltanto gli amministratori
-        if (! $authUser->hasRole('super_admin'))
-            {
-                return false;
-            }
+        if (! $authUser->hasRole('super_admin')) {
+            return false;
+        }
+
         // ma non eliminiamo aziende coi dipendenti dentro
         return ! $company->users()->exists();
     }
@@ -107,5 +104,4 @@ class CompanyPolicy
         return $authUser->hasRole('super_admin')
         && $authUser->can('Reorder:Company');
     }
-
 }

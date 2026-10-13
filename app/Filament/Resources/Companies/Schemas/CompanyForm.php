@@ -12,16 +12,16 @@ class CompanyForm
         return $schema
             ->components([
                 TextInput::make('name')
-                ->label('Nome Azienda')
-                ->placeholder('Es. Azienda S.r.l.')
-                ->required()
-                ->maxLength(255),
+                    ->label('Nome Azienda')
+                    ->placeholder('Es. Azienda S.r.l.')
+                    ->required()
+                    ->maxLength(255),
 
                 TextInput::make('vat_number')
-                ->label('Partita IVA')
-                ->placeholder('0123456789')
-                ->maxLength(20)
-                ->unique(ignoreRecord: true),
+                    ->label('Partita IVA')
+                    ->placeholder('0123456789')
+                    ->maxLength(20)
+                    ->unique(ignoreRecord: true),
             ]);
     }
 }

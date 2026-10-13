@@ -41,10 +41,10 @@ class CompaniesTable
             ])
             ->recordActions([
                 ViewAction::make()
-                ->label('Visualizza'),
+                    ->label('Visualizza'),
 
                 EditAction::make()
-                ->label('Modifica'),
+                    ->label('Modifica'),
             ])
             // disabilitatat cancellazione al momento per evitare incoerenza
             ->toolbarActions([

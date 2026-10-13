@@ -12,11 +12,11 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            //aggiungiamo quindi il campo company_id
+            // aggiungiamo quindi il campo company_id
             $table->foreignId('company_id')
-            ->nullable()
-            ->constrained()
-            ->nullOnDelete();
+                ->nullable()
+                ->constrained()
+                ->nullOnDelete();
         });
     }
 

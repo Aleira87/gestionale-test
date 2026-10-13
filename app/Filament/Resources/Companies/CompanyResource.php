@@ -10,7 +10,6 @@ use App\Filament\Resources\Companies\Schemas\CompanyForm;
 use App\Filament\Resources\Companies\Schemas\CompanyInfolist;
 use App\Filament\Resources\Companies\Tables\CompaniesTable;
 use App\Models\Company;
-use App\Models\User;
 use BackedEnum;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
@@ -27,7 +26,7 @@ class CompanyResource extends Resource
 
     protected static ?string $recordTitleAttribute = 'name';
 
-    //creiamo un metodo affinchè un company admin veda solo la sua azienda e non le altre
+    // creiamo un metodo affinchè un company admin veda solo la sua azienda e non le altre
     #[Override]
     public static function getEloquentQuery(): Builder
     {
@@ -39,16 +38,14 @@ class CompanyResource extends Resource
             return $query->whereRaw('1 = 0');
         }
 
-        if ($user->hasRole('super_admin'))
-            {
-                return $query;
-            }
-        if ($user->hasRole('company_admin'))
-            {
-                return $query->whereHas('managers', function (Builder $query) use ($user)
-                { $query->whereKey($user->getKey());
-                });
-            }
+        if ($user->hasRole('super_admin')) {
+            return $query;
+        }
+        if ($user->hasRole('company_admin')) {
+            return $query->whereHas('managers', function (Builder $query) use ($user) {
+                $query->whereKey($user->getKey());
+            });
+        }
 
         return $query->whereRaw('1 = 0');
     }

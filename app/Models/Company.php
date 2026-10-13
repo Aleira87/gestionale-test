@@ -18,12 +18,13 @@ class Company extends Model
     {
         return $this->hasMany(User::class);
         // il metodo users definisce definisce una relazione uno-a-molti
-        //una azienda può avere più users associati
-        //Laravel quindi si aspetta company_id sul modello user
+        // una azienda può avere più users associati
+        // Laravel quindi si aspetta company_id sul modello user
     }
+
     public function managers(): BelongsToMany
     {
         return $this->belongsToMany(User::class)
-        ->withTimestamps();
+            ->withTimestamps();
     }
 }
