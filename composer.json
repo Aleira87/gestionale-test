@@ -87,5 +87,7 @@
         }
     },
     "minimum-stability": "stable",
-    "prefer-stable": true
+    "prefer-stable": true,
+    "editor.formatOnSave" : true,
+    "editor.defaultFormatter": "msamgan.laravel-pint-vscode"
 }
