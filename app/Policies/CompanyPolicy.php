@@ -36,8 +36,7 @@ class CompanyPolicy
 
     public function create(AuthUser $authUser): bool
     {
-        return $authUser->hasRole('super_admin')
-        && $authUser->can('Create:Company');
+        return $authUser->hasRole('super_admin');
     }
 
     public function update(AuthUser $authUser, Company $company): bool
@@ -47,16 +46,22 @@ class CompanyPolicy
                     return true;
                 }
 
-                return $authUser->hasRole('company_admin')
-                && $authUser->company_id === $company->id
-                && $authUser->can('Update:Company');
+                return false;
+                //momentaneamente false... da aggiornare una volta definito che IL COMPANY ADMIN abbia più aziende
+                // return $authUser->hasRole('company_admin')
+                // && $authUser->company_id === $company->id
+                // && $authUser->can('Update:Company');
     }
 
     public function delete(AuthUser $authUser, Company $company): bool
     {
-        return $authUser->hasRole('super_admin')
-        && $authUser->can('Delete:Company')
-        && $company->users()->count() === 0;
+        // soltanto gli amministratori
+        if (! $authUser->hasRole('super_admin'))
+            {
+                return false;
+            }
+        // ma non eliminiamo aziende coi dipendenti dentro
+        return ! $company->users()->exists();
     }
 
     public function deleteAny(AuthUser $authUser): bool
