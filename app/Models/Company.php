@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Company extends Model
@@ -19,5 +20,10 @@ class Company extends Model
         // il metodo users definisce definisce una relazione uno-a-molti
         //una azienda può avere più users associati
         //Laravel quindi si aspetta company_id sul modello user
+    }
+    public function managers(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class)
+        ->withTimestamps();
     }
 }

@@ -11,6 +11,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use App\Models\Company;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Spatie\Permission\Traits\HasRoles;
 
 #[Fillable(['name', 'email', 'password'])]
@@ -37,5 +38,11 @@ class User extends Authenticatable
     // ogni utente appartiene a zero o a una sola azienda
     {
         return $this->belongsTo(Company::class);
+    }
+
+    public function managedCompanies(): BelongsToMany
+    {
+        return $this->belongsToMany(Company::class)
+        ->withTimestamps();
     }
 }
