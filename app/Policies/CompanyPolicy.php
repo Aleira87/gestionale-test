@@ -27,11 +27,13 @@ class CompanyPolicy
             return true;
         }
 
-        return $authUser->hasRole('company_admin')
+        $isAuth = $authUser->hasRole('company_admin')
         && $authUser->managedCompanies()
             ->whereKey($company->getKey())
             ->exists()
         && $authUser->can('View:Company');
+
+        return $isAuth;
     }
 
     public function create(User $authUser): bool
