@@ -22,7 +22,7 @@ class CompanyPolicy
         );
     }
 
-    public function view(AuthUser $authUser, Company $company): bool
+    public function view(User $authUser, Company $company): bool
     {
         if ($authUser->hasRole('super_admin'))
             {
@@ -30,7 +30,9 @@ class CompanyPolicy
             }
 
             return $authUser->hasRole('company_admin')
-            && $authUser->company_id === $company->id
+            && $authUser->managedCompanies()
+            ->whereKey($company->getKey())
+            ->exists()
             && $authUser->can('View:Company');
     }
 
@@ -39,18 +41,18 @@ class CompanyPolicy
         return $authUser->hasRole('super_admin');
     }
 
-    public function update(AuthUser $authUser, Company $company): bool
+    public function update(User $authUser, Company $company): bool
     {
             if ($authUser->hasRole('super_admin'))
                 {
                     return true;
                 }
 
-                return false;
-                //momentaneamente false... da aggiornare una volta definito che IL COMPANY ADMIN abbia più aziende
-                // return $authUser->hasRole('company_admin')
-                // && $authUser->company_id === $company->id
-                // && $authUser->can('Update:Company');
+
+                return $authUser->managedCompanies()
+                ->whereKey($company->getKey())
+                ->exists()
+                && $authUser->can('Update:Company');
     }
 
     public function delete(AuthUser $authUser, Company $company): bool

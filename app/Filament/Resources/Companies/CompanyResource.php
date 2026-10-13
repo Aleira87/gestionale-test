@@ -10,11 +10,14 @@ use App\Filament\Resources\Companies\Schemas\CompanyForm;
 use App\Filament\Resources\Companies\Schemas\CompanyInfolist;
 use App\Filament\Resources\Companies\Tables\CompaniesTable;
 use App\Models\Company;
+use App\Models\User;
 use BackedEnum;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
+use Override;
 
 class CompanyResource extends Resource
 {
@@ -23,6 +26,32 @@ class CompanyResource extends Resource
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
 
     protected static ?string $recordTitleAttribute = 'name';
+
+    //creiamo un metodo affinchè un company admin veda solo la sua azienda e non le altre
+    #[Override]
+    public static function getEloquentQuery(): Builder
+    {
+        $query = parent::getEloquentQuery();
+
+        $user = auth()->user();
+
+        if (! $user) {
+            return $query->whereRaw('1 = 0');
+        }
+
+        if ($user->hasRole('super_admin'))
+            {
+                return $query;
+            }
+        if ($user->hasRole('company_admin'))
+            {
+                return $query->whereHas('managers', function (Builder $query) use ($user)
+                { $query->whereKey($user->getKey());
+                });
+            }
+
+        return $query->whereRaw('1 = 0');
+    }
 
     public static function form(Schema $schema): Schema
     {
