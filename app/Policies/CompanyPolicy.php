@@ -49,7 +49,8 @@ class CompanyPolicy
                 }
 
 
-                return $authUser->managedCompanies()
+                return $authUser->hasRole('company_admin')
+                && $authUser->managedCompanies()
                 ->whereKey($company->getKey())
                 ->exists()
                 && $authUser->can('Update:Company');
