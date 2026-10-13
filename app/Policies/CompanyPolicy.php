@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Policies;
 
-use Illuminate\Foundation\Auth\User as AuthUser;
 use App\Models\Company;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
@@ -13,7 +12,7 @@ class CompanyPolicy
 {
     use HandlesAuthorization;
 
-    public function viewAny(AuthUser $authUser): bool
+    public function viewAny(User $authUser): bool
     {
         return $authUser->hasRole('super_admin')
         || (
@@ -36,7 +35,7 @@ class CompanyPolicy
             && $authUser->can('View:Company');
     }
 
-    public function create(AuthUser $authUser): bool
+    public function create(User $authUser): bool
     {
         return $authUser->hasRole('super_admin');
     }
@@ -56,7 +55,7 @@ class CompanyPolicy
                 && $authUser->can('Update:Company');
     }
 
-    public function delete(AuthUser $authUser, Company $company): bool
+    public function delete(User $authUser, Company $company): bool
     {
         // soltanto gli amministratori
         if (! $authUser->hasRole('super_admin'))
@@ -67,43 +66,43 @@ class CompanyPolicy
         return ! $company->users()->exists();
     }
 
-    public function deleteAny(AuthUser $authUser): bool
+    public function deleteAny(User $authUser): bool
     {
         return $authUser->hasRole('super_admin')
         && $authUser->can('DeleteAny:Company');
     }
 
-    public function restore(AuthUser $authUser, Company $company): bool
+    public function restore(User $authUser, Company $company): bool
     {
         return $authUser->hasRole('super_admin')
             && $authUser->can('Restore:Company');
     }
 
-    public function forceDelete(AuthUser $authUser, Company $company): bool
+    public function forceDelete(User $authUser, Company $company): bool
     {
         return $authUser->hasRole('super_admin')
             && $authUser->can('ForceDeleteAny:Company');
     }
 
-    public function forceDeleteAny(AuthUser $authUser): bool
+    public function forceDeleteAny(User $authUser): bool
     {
         return $authUser->hasRole('super_admin')
         && $authUser->can('ForceDeleteAny:Company');
     }
 
-    public function restoreAny(AuthUser $authUser): bool
+    public function restoreAny(User $authUser): bool
     {
         return $authUser->hasRole('super_admin')
         && $authUser->can('RestoreAny:Company');
     }
 
-    public function replicate(AuthUser $authUser, Company $company): bool
+    public function replicate(User $authUser, Company $company): bool
     {
         return $authUser->hasRole('super_admin')
         && $authUser->can('Replicate:Company');
     }
 
-    public function reorder(AuthUser $authUser): bool
+    public function reorder(User $authUser): bool
     {
         return $authUser->hasRole('super_admin')
         && $authUser->can('Reorder:Company');
