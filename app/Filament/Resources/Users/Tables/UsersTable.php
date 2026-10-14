@@ -47,7 +47,25 @@ class UsersTable
                     ->dateTime('d/m/Y H:i')
                     ->sortable(),
             ])
-            ->filters([])
+            ->filters([
+                SelectFilter::make('role')
+                    ->label('Ruolo')
+                    ->options([
+                        'super_admin' => 'Super amministratore',
+                        'company_admin' => 'Amministratore azienda',
+                        'employee' => 'Dipendente',
+                        'user' => 'Utente',
+                    ])
+                    ->query(function ($query, array $data) {
+                        return $query->when(
+                            $data['value'] ?? null,
+                            fn ($query, $role) => $query->whereHas(
+                                'roles',
+                                fn ($roleQuery) => $roleQuery->where('name', $role)
+                            )
+                        );
+                    }),
+            ])
             ->recordActions([
                 EditAction::make()
                     ->label('Modifica'),
