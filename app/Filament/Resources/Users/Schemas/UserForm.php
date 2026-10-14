@@ -7,10 +7,39 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Schema;
+use Illuminate\Support\Facades\Auth;
 use Spatie\Permission\Models\Role;
 
 class UserForm
 {
+    private static function availableCompanies(): array
+    {
+        $authUser = Auth::user();
+
+        if (! $authUser) {
+            return [];
+        }
+
+        // Il super admin può selezionare tutte le aziende.
+        if ($authUser->hasRole('super_admin')) {
+            return Company::query()
+                ->orderBy('name')
+                ->pluck('name', 'id')
+                ->all();
+        }
+
+        // Il company admin può selezionare solo le aziende gestite.
+        if ($authUser->hasRole('company_admin')) {
+            return $authUser->managedCompanies()
+                ->orderBy('companies.name')
+                ->pluck('companies.name', 'companies.id')
+                ->all();
+        }
+
+        // Gli altri ruoli non hanno aziende selezionabili.
+        return [];
+    }
+
     public static function configure(Schema $schema): Schema
     {
         return $schema->components([
@@ -50,7 +79,7 @@ class UserForm
             Select::make('company_id')
                 ->label('Azienda di appartenenza')
                 ->options(
-                    Company::query()
+                    fn (): array => self::availableCompanies()
                         ->orderBy('name')
                         ->pluck('name', 'id')
                         ->all()
@@ -63,7 +92,7 @@ class UserForm
             Select::make('managed_company_ids')
                 ->label('Aziende amministrate')
                 ->options(
-                    Company::query()
+                    fn (): array => self::availableCompanies()
                         ->orderBy('name')
                         ->pluck('name', 'id')
                         ->all()
