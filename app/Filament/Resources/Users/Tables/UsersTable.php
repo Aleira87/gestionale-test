@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Users\Tables;
 
+use App\Models\Company;
 use App\Models\User;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
@@ -64,6 +65,19 @@ class UsersTable
                                 'roles',
                                 fn ($roleQuery) => $roleQuery->where('name', $role)
                             )
+                        );
+                    }),
+                SelectFilter::make('company_id')
+                    ->label('Azienda')
+                    ->options(
+                        Company::query()
+                            ->orderBy('name')
+                            ->pluck('name', 'id')
+                    )
+                    ->query(function ($query, array $data) {
+                        return $query->when(
+                            $data['value'] ?? null,
+                            fn ($query, $companyId) => $query->where('company_id', $companyId)
                         );
                     }),
             ])
