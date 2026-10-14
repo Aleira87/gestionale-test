@@ -13,6 +13,8 @@ use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Auth;
 
 class UserResource extends Resource
 {
@@ -46,5 +48,35 @@ class UserResource extends Resource
             'create' => CreateUser::route('/create'),
             'edit' => EditUser::route('/{record}/edit'),
         ];
+    }
+
+    public static function getEloquentQuery(): Builder
+    {
+        $query = parent::getEloquentQuery();
+        $authUser = Auth::user();
+
+        if (! $authUser) {
+            return $query->whereRaw('1 = 0');
+        }
+
+        // Il super admin può recuperare tutti gli utenti.
+        if ($authUser->hasRole('super_admin')) {
+            return $query;
+        }
+
+        // Il company admin vede solo i dipendenti delle aziende gestite.
+        if ($authUser->hasRole('company_admin')) {
+            return $query
+                ->whereHas('roles', function (Builder $roleQuery): void {
+                    $roleQuery->where('name', 'employee');
+                })
+                ->whereIn(
+                    'company_id',
+                    $authUser->managedCompanies()->select('companies.id')
+                );
+        }
+
+        // Gli altri ruoli non ottengono l'elenco degli utenti.
+        return $query->whereRaw('1 = 0');
     }
 }
