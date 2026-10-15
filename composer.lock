@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "333416c76f7ac396dfda9cd62484a9ed",
+    "content-hash": "7dc87edb989364a31ffb11051aeb502a",
     "packages": [
         {
             "name": "anourvalar/eloquent-serialize",
@@ -9427,6 +9427,59 @@
                 }
             ],
             "time": "2026-09-03T16:02:27+00:00"
+        },
+        {
+            "name": "tablekit/filament-tablekit",
+            "version": "v5.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/maytham553/filament-tablekit.git",
+                "reference": "850e9b3589fa027b3b43e753ed9dcaa8d4f065da"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/maytham553/filament-tablekit/zipball/850e9b3589fa027b3b43e753ed9dcaa8d4f065da",
+                "reference": "850e9b3589fa027b3b43e753ed9dcaa8d4f065da",
+                "shasum": ""
+            },
+            "require": {
+                "filament/filament": "^5.8.4",
+                "illuminate/support": "^11.28|^12.0|^13.0",
+                "php": "^8.2",
+                "spatie/laravel-package-tools": "^1.16"
+            },
+            "require-dev": {
+                "laravel/pint": "^1.13",
+                "orchestra/testbench": "^9.0|^10.0|^11.0",
+                "pestphp/pest": "^3.0|^4.0",
+                "pestphp/pest-plugin-laravel": "^3.0|^4.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "TableKit\\TableKitServiceProvider"
+                    ]
+                },
+                "branch-alias": {
+                    "dev-main": "5.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "TableKit\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "Saved table views (filters, search, sort, columns, grouping) with a favorites bar for Filament v5 tables.",
+            "support": {
+                "issues": "https://github.com/maytham553/filament-tablekit/issues",
+                "source": "https://github.com/maytham553/filament-tablekit/tree/v5.0.0"
+            },
+            "time": "2026-10-13T10:51:59+00:00"
         },
         {
             "name": "tijsverkoyen/css-to-inline-styles",
