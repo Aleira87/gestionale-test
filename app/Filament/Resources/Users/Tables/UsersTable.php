@@ -10,12 +10,16 @@ use Filament\Actions\EditAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
+use OccTherapist\AdvancedTableExportForFilament\Actions\TableExportQuickHeaderAction;
 
 class UsersTable
 {
     public static function configure(Table $table): Table
     {
         return $table
+        ->headerActions([
+            TableExportQuickHeaderAction::make(),
+        ])
             ->columns([
                 TextColumn::make('name')
                     ->label('Nome')

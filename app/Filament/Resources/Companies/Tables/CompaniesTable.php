@@ -16,7 +16,7 @@ class CompaniesTable
     {
         return $table
             ->headerActions([
-                TableExportQuickHeaderActions::make(),
+                TableExportQuickHeaderAction::make(),
             ])
             ->columns([
                 TextColumn::make('name')
