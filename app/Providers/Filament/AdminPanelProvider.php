@@ -3,7 +3,6 @@
 namespace App\Providers\Filament;
 
 use BezhanSalleh\FilamentShield\FilamentShieldPlugin;
-use TableKit\TableKitPlugin;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
@@ -20,7 +19,8 @@ use Illuminate\Foundation\Http\Middleware\PreventRequestForgery;
 use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
-
+use OccTherapist\AdvancedTableExportForFilament\AdvancedTableExportForFilamentPlugin;
+use TableKit\TableKitPlugin;
 
 class AdminPanelProvider extends PanelProvider
 {
@@ -58,6 +58,10 @@ class AdminPanelProvider extends PanelProvider
             ->plugins([
                 FilamentShieldPlugin::make(),
                 TableKitPlugin::make(),
+                AdvancedTableExportForFilamentPlugin::make()
+                    ->maxPdfRows(200)
+                    ->maxExportRows(2000)
+                    ->previewPerPage(25),
             ])
             ->authMiddleware([
                 Authenticate::class,

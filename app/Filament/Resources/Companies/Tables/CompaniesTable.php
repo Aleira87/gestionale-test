@@ -8,12 +8,16 @@ use Filament\Actions\EditAction;
 use Filament\Actions\ViewAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use OccTherapist\AdvancedTableExportForFilament\Actions\TableExportBulkAction;
 
 class CompaniesTable
 {
     public static function configure(Table $table): Table
     {
         return $table
+            ->headerActions([
+                TableExportQuickHeaderActions::make(),
+            ])
             ->columns([
                 TextColumn::make('name')
                     ->label('Nome Azienda')
@@ -52,6 +56,10 @@ class CompaniesTable
                     // DeleteBulkAction::make()
                     // ->label('Elimina selezionate'),
                 ]),
+                TableExportBulkAction::make()
+                    ->withColumns([
+                        TextColumn::make('internal_notes')->label('Note'),
+                    ]),
             ]);
     }
 }

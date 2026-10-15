@@ -12,6 +12,7 @@
         "laravel/fortify": "^1.41",
         "laravel/framework": "^13.17",
         "laravel/tinker": "^3.0",
+        "occtherapist/advanced-table-export-for-filament": "^1.2",
         "spatie/laravel-permission": "^8.3",
         "tablekit/filament-tablekit": "^5.0"
     },
