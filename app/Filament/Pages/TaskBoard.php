@@ -25,9 +25,9 @@ class TaskBoard extends BoardPage
             ->columnIdentifier('status')
             ->positionIdentifier('position') // Enable drag-and-drop with position field
             ->columns([
-                Column::make('todo')->label('To Do')->color('gray'),
-                Column::make('in_progress')->label('In Progress')->color('blue'),
-                Column::make('completed')->label('Completed')->color('green'),
+                Column::make('todo')->label('Da fare')->color('gray'),
+                Column::make('in_progress')->label('In Corso')->color('blue'),
+                Column::make('done')->label('Completate')->color('green'),
             ]);
     }
 
