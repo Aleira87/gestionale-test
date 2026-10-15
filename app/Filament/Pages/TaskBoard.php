@@ -33,9 +33,6 @@ class TaskBoard extends BoardPage
             ->recordTitleAttribute('title')
             ->columnIdentifier('status')
             ->positionIdentifier('position')
-            ->actions([
-                $this->makeCreateTaskAction(),
-            ])
             ->recordActions([
                 $this->makeEditTaskAction(),
             ])
@@ -44,6 +41,13 @@ class TaskBoard extends BoardPage
                 Column::make('in_progress')->label('In Corso')->color('blue'),
                 Column::make('done')->label('Completate')->color('green'),
             ]);
+    }
+
+    protected function getHeaderActions(): array
+    {
+        return [
+            $this->makeCreateTaskAction(),
+        ];
     }
 
     protected function makeCreateTaskAction(): Action
@@ -57,7 +61,7 @@ class TaskBoard extends BoardPage
             ->action(function (array $data): void {
                 $this->validateTaskAssignment($data);
 
-                $task = new Task();
+                $task = new Task;
                 $task->fill($data);
 
                 // La posizione viene assegnata esplicitamente:
@@ -219,8 +223,7 @@ class TaskBoard extends BoardPage
 
         return User::query()
             ->where('company_id', $companyId)
-            ->whereHas('roles', fn (Builder $query) =>
-                $query->where('name', 'employee')
+            ->whereHas('roles', fn (Builder $query) => $query->where('name', 'employee')
             );
     }
 
