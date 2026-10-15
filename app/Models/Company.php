@@ -22,6 +22,11 @@ class Company extends Model
         // Laravel quindi si aspetta company_id sul modello user
     }
 
+    public function tasks(): HasMany
+    {
+        return $this->hasMany(Task::class);
+    }
+
     public function managers(): BelongsToMany
     {
         return $this->belongsToMany(User::class)
