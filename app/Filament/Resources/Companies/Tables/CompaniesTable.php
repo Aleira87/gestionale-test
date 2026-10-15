@@ -9,6 +9,7 @@ use Filament\Actions\ViewAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use OccTherapist\AdvancedTableExportForFilament\Actions\TableExportBulkAction;
+use OccTherapist\AdvancedTableExportForFilament\Actions\TableExportQuickHeaderAction;
 
 class CompaniesTable
 {
