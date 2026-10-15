@@ -10,13 +10,16 @@ use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
+use Filament\Infolists\Components\TextEntry;
 use Filament\Schemas\Components\Utilities\Get;
+use Filament\Schemas\Schema;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
 use Relaticle\Flowforge\Board;
 use Relaticle\Flowforge\BoardPage;
 use Relaticle\Flowforge\Column;
+use Relaticle\Flowforge\Components\CardFlex;
 
 class TaskBoard extends BoardPage
 {
@@ -33,6 +36,48 @@ class TaskBoard extends BoardPage
             ->recordTitleAttribute('title')
             ->columnIdentifier('status')
             ->positionIdentifier('position')
+            ->cardSchema(fn (Schema $schema) => $schema->components([
+                TextEntry::make('title')
+                    ->weight('bold')
+                    ->size('lg'),
+
+                TextEntry::make('description')
+                    ->limit(100)
+                    ->color('gray')
+                    ->placeholder('Nessuna descrizione'),
+
+                CardFlex::make([
+                    TextEntry::make('priority')
+                        ->badge()
+                        ->icon('heroicon-o-flag')
+                        ->formatStateUsing(fn ($state) => match ($state) {
+                            'high' => 'Alta',
+                            'medium' => 'Media',
+                            'low' => 'Bassa',
+                            default => $state,
+                        })
+                        ->color(fn ($state) => match ($state) {
+                            'high' => 'danger',
+                            'medium' => 'warning',
+                            'low' => 'success',
+                            default => 'gray',
+                        }),
+
+                    TextEntry::make('due_date')
+                        ->date('d/m/Y')
+                        ->icon('heroicon-o-calendar')
+                        ->placeholder('Senza scadenza'),
+                ])->wrap()->justify('start'),
+
+                TextEntry::make('company.name')
+                    ->icon('heroicon-o-building-office-2')
+                    ->color('gray'),
+
+                TextEntry::make('user.name')
+                    ->icon('heroicon-o-user')
+                    ->placeholder('Non assegnata')
+                    ->color('gray'),
+            ]))
             ->recordActions([
                 $this->makeEditTaskAction(),
             ])
