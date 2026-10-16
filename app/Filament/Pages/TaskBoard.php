@@ -19,6 +19,8 @@ use Illuminate\Validation\ValidationException;
 use Relaticle\Flowforge\Board;
 use Relaticle\Flowforge\BoardPage;
 use Relaticle\Flowforge\Column;
+use Filament\Tables\Filters\Filter;
+use Filament\Tables\Filters\SelectFilter;
 use Relaticle\Flowforge\Components\CardFlex;
 
 class TaskBoard extends BoardPage
@@ -32,6 +34,7 @@ class TaskBoard extends BoardPage
     public function board(Board $board): Board
     {
         return $board
+            ->searchable([])
             ->query($this->getEloquentQuery())
             ->recordTitleAttribute('title')
             ->columnIdentifier('status')
