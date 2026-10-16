@@ -26,6 +26,10 @@ class CompanyResource extends Resource
 
     protected static ?string $recordTitleAttribute = 'name';
 
+    protected static ?string $modelLabel = 'Azienda';
+
+    protected static ?string $pluralModelLabel = 'Aziende';
+
     // creiamo un metodo affinchè un company admin veda solo la sua azienda e non le altre
     #[Override]
     public static function getEloquentQuery(): Builder
