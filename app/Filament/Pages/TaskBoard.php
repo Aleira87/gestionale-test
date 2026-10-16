@@ -125,14 +125,14 @@ class TaskBoard extends BoardPage
             ->visible(fn (): bool => $this->canManageTasks())
             ->modalHeading('Modifica attività')
             ->schema($this->taskFormSchema())
-            ->fillForm(fn (array $record): array => [
-                'title' => $record['title'],
-                'description' => $record['description'] ?? null,
-                'company_id' => $record['company_id'],
-                'user_id' => $record['user_id'],
-                'status' => $record['status'],
-                'priority' => $record['priority'],
-                'due_date' => $record['due_date'] ?? null,
+            ->fillForm(fn (Task $record): array => [
+                'title' => $record->title,
+                'description' => $record->description ?? null,
+                'company_id' => $record->company_id,
+                'user_id' => $record->user_id,
+                'status' => $record->status,
+                'priority' => $record->pcntl_getpriority,
+                'due_date' => $record->due_date ?? null,
             ])
             ->action(function (array $data, Task $record): void {
                 // Non basta fidarsi dell'ID ricevuto dal form:
