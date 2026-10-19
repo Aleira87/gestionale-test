@@ -8,6 +8,7 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Components\Utilities\Get;
+use Filament\Schemas\Components\Utilities\Set;
 use Filament\Schemas\Schema;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Validation\Rule;
@@ -44,7 +45,27 @@ class TicketResource extends BaseTicketResource
                     ->relationship('supplier', 'name')
                     ->searchable()
                     ->preload()
-                    ->live(),
+                    ->live()
+                    ->afterStateUpdated(function (Set $set) {
+                        $set('technician_id', null);
+                    }),
+                Select::make('technician_id')
+                    ->label('Tecnico')
+                    ->options(function (Get $get): array {
+                        $supplierId = $get('supplier_id');
+
+                        if (! $supplierId) {
+                            return [];
+                        }
+
+                        return Technician::query()
+                            ->where('supplier_id', $supplierId)
+                            ->orderBy('name')
+                            ->pluck('name', 'id')
+                            ->all();
+                    })
+                    ->searchable()
+                    ->disabled(fn (Get $get): bool => ! $get('supplier_id')),
             ])
             ->columns(2);
 
