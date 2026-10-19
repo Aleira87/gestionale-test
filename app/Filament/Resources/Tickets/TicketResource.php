@@ -4,6 +4,7 @@ namespace App\Filament\Resources\Tickets;
 
 use App\Models\Ticket;
 use daacreators\CreatorsTicketing\Filament\Resources\Tickets\TicketResource as BaseTicketResource;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Components\Utilities\Get;
@@ -38,6 +39,12 @@ class TicketResource extends BaseTicketResource
                             ->where('primario', $get('primario'))
                             ->ignore($record?->getKey()),
                     ]),
+                Select::make('supplier_id')
+                    ->label('Fornitore')
+                    ->relationship('supplier', 'name')
+                    ->searchable()
+                    ->preload()
+                    ->live(),
             ])
             ->columns(2);
 
