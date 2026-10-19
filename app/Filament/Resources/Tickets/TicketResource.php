@@ -74,11 +74,16 @@ class TicketResource extends BaseTicketResource
 
                 DateTimePicker::make('on_site_at')
                     ->label('Data On Site')
-                    ->seconds(false),
+                    ->seconds(false)
+                    ->afterOrEqual('opened_at'),
 
                 DateTimePicker::make('closed_at')
                     ->label('Data chiusura')
-                    ->seconds(false),
+                    ->seconds(false)
+                    ->rules([
+                        'after_or_equal:opened_at',
+                        'after_or_equal:on_site_at',
+                    ])
             ])
             ->columns(2);
 
