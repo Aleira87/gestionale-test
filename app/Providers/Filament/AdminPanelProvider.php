@@ -21,7 +21,7 @@ use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 use OccTherapist\AdvancedTableExportForFilament\AdvancedTableExportForFilamentPlugin;
 use TableKit\TableKitPlugin;
-use daacreators\CreatorsTicketing\TicketingPlugin;
+use App\Filament\Plugins\CustomTicketingPlugin;
 
 class AdminPanelProvider extends PanelProvider
 {
@@ -64,7 +64,7 @@ class AdminPanelProvider extends PanelProvider
                     ->maxPdfRows(200)
                     ->maxExportRows(2000)
                     ->previewPerPage(25),
-                TicketingPlugin::make(),
+                CustomTicketingPlugin::make(),
             ])
             ->authMiddleware([
                 Authenticate::class,

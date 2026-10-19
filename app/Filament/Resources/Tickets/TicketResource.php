@@ -3,12 +3,47 @@
 namespace App\Filament\Resources\Tickets;
 
 use App\Models\Ticket;
-use App\Filament\Resources\Tickets\Pages;
 use daacreators\CreatorsTicketing\Filament\Resources\Tickets\TicketResource as BaseTicketResource;
+use Filament\Forms\Components\TextInput;
+use Filament\Schemas\Components\Section;
+use Filament\Schemas\Components\Utilities\Get;
+use Filament\Schemas\Schema;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Validation\Rule;
 
 class TicketResource extends BaseTicketResource
 {
     protected static ?string $model = Ticket::class;
+
+    public static function form(Schema $schema): Schema
+    {
+        // Recuperiamo il form originale del plugin.
+        $schema = parent::form($schema);
+
+        // Recuperiamo i componenti già presenti.
+        $components = $schema->getComponents();
+
+        // Aggiungiamo una sezione dedicata ai nostri campi.
+        $components[] = Section::make('Dati gestionali')
+            ->schema([
+                TextInput::make('primario')
+                    ->label('Primario')
+                    ->maxLength(255),
+
+                TextInput::make('secondario')
+                    ->label('Secondario')
+                    ->maxLength(255)
+                    ->rules([
+                        fn (Get $get, ?Model $record) => Rule::unique('ct_tickets', 'secondario')
+                            ->where('primario', $get('primario'))
+                            ->ignore($record?->getKey()),
+                    ]),
+            ])
+            ->columns(2);
+
+        // Restituiamo lo schema completo.
+        return $schema->components($components);
+    }
 
     public static function getPages(): array
     {
