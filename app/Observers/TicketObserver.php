@@ -63,7 +63,7 @@ class TicketObserver
 
         if ($ticket->on_site_at && $ticket->isDirty('on_site_at')) {
 
-            $statusWasChanged = $ticket->isDirty('ticket_status_id');
+            $statusWasChanged = $ticket->exists && $ticket->isDirty('ticket_status_id');
 
             $currentStatusIsDefault = TicketStatus::query()
                 ->whereKey($ticket->ticket_status_id)
