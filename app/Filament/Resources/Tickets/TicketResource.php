@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\Tickets;
 
 use App\Models\Ticket;
+use App\Models\Technician;
 use daacreators\CreatorsTicketing\Filament\Resources\Tickets\TicketResource as BaseTicketResource;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
