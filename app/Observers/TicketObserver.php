@@ -42,6 +42,22 @@ class TicketObserver
             }
         }
 
+        // La data On Site richiede una data di apertura.
+        if ($ticket->on_site_at && ! $ticket->opened_at) {
+            throw ValidationException::withMessages([
+                'opened_at' => 'Inserisci la data di apertura prima della data On Site.',
+            ]);
+        }
+
+        // La chiusura non può precedere l'intervento On Site.
+        if ($ticket->on_site_at && $ticket->closed_at) {
+            if (Carbon::parse($ticket->closed_at)->lt(Carbon::parse($ticket->on_site_at))) {
+                throw ValidationException::withMessages([
+                    'closed_at' => 'La data di chiusura non può precedere la data On Site.',
+                ]);
+            }
+        }
+
         // 3. Quando viene inserita On Site, imposta In Progress.
         if ($ticket->on_site_at && $ticket->isDirty('on_site_at')) {
             $inProgressId = TicketStatus::query()
