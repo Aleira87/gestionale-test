@@ -12,6 +12,10 @@ use Filament\Schemas\Components\Section;
 use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Components\Utilities\Set;
 use Filament\Schemas\Schema;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\SelectFilter;
+use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Validation\Rule;
 
@@ -88,6 +92,79 @@ class TicketResource extends BaseTicketResource
 
         // Restituiamo lo schema completo.
         return $schema->components($components);
+    }
+
+    public static function table(Table $table): Table
+    {
+        $table = parent::table($table);
+
+        $columns = $table->getColumns();
+
+        $columns[] = TextColumn::make('supplier.name')
+            ->label('Fornitore')
+            ->placeholder('Non assegnato')
+            ->searchable()
+            ->sortable()
+            ->toggleable();
+
+        $columns[] = TextColumn::make('technician.name')
+            ->label('Tecnico')
+            ->placeholder('Non assegnato')
+            ->searchable()
+            ->sortable()
+            ->toggleable();
+
+        $columns[] = TextColumn::make('primario')
+            ->label('Primario')
+            ->placeholder('Non specificato')
+            ->searchable()
+            ->sortable()
+            ->toggleable();
+
+        $columns[] = TextColumn::make('secondario')
+            ->label('Secondario')
+            ->placeholder('Non specificato')
+            ->searchable()
+            ->sortable()
+            ->toggleable();
+
+        $columns[] = TextColumn::make('on_site_at')
+            ->label('Data On Site')
+            ->dateTime('d/m/Y H:i')
+            ->placeholder('Non specificata')
+            ->sortable()
+            ->toggleable();
+
+        $filters = $table->getFilters();
+
+        $filters[] = SelectFilter::make('supplier_id')
+            ->label('Fornitore')
+            ->relationship('supplier', 'name')
+            ->searchable()
+            ->preload();
+
+        $filters[] = SelectFilter::make('technician_id')
+            ->label('Tecnico')
+            ->relationship(
+                'technician',
+                'name',
+                modifyQueryUsing: function (Builder $query, $livewire): void {
+                    $supplierId = data_get(
+                        $livewire->getTableFilterFormState('supplier_id'),
+                        'value'
+                    );
+
+                    if (filled($supplierId)) {
+                        $query->where('supplier_id', $supplierId);
+                    }
+                }
+            )
+            ->searchable()
+            ->preload();
+
+        return $table
+            ->columns($columns)
+            ->filters($filters);
     }
 
     public static function getPages(): array

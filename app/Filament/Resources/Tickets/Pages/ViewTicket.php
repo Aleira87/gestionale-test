@@ -17,6 +17,11 @@ use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Components\Utilities\Set;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\ValidationException;
+use Filament\Infolists\Components\TextEntry;
+use Filament\Schemas\Components\Section;
+use Filament\Schemas\Components\Tabs;
+use Filament\Schemas\Components\Tabs\Tab;
+use Filament\Schemas\Schema;
 
 class ViewTicket extends BaseViewTicket
 {
@@ -121,6 +126,64 @@ class ViewTicket extends BaseViewTicket
                         ->send();
                 }),
         ];
+    }
+
+    public function infolist(Schema $schema): Schema
+    {
+        $schema = parent::infolist($schema);
+
+        $components = $schema->getComponents();
+
+        foreach ($components as $component) {
+            if ($component instanceof Tabs) {
+                $tabs = $component->getChildComponents();
+
+                $tabs[] = Tab::make('Dati gestionali')
+                    ->icon('heroicon-o-clipboard-document-list')
+                    ->schema([
+                        Section::make('Informazioni gestionali')
+                            ->schema([
+                                TextEntry::make('primario')
+                                    ->label('Primario')
+                                    ->placeholder('Non specificato'),
+
+                                TextEntry::make('secondario')
+                                    ->label('Secondario')
+                                    ->placeholder('Non specificato'),
+
+                                TextEntry::make('supplier.name')
+                                    ->label('Fornitore')
+                                    ->placeholder('Non assegnato'),
+
+                                TextEntry::make('technician.name')
+                                    ->label('Tecnico')
+                                    ->placeholder('Non assegnato'),
+
+                                TextEntry::make('opened_at')
+                                    ->label('Data apertura')
+                                    ->dateTime('d/m/Y H:i')
+                                    ->placeholder('Non specificata'),
+
+                                TextEntry::make('on_site_at')
+                                    ->label('Data On Site')
+                                    ->dateTime('d/m/Y H:i')
+                                    ->placeholder('Non specificata'),
+
+                                TextEntry::make('closed_at')
+                                    ->label('Data chiusura')
+                                    ->dateTime('d/m/Y H:i')
+                                    ->placeholder('Non specificata'),
+                            ])
+                            ->columns(2),
+                    ]);
+
+                $component->tabs($tabs);
+
+                break;
+            }
+        }
+
+        return $schema->components($components);
     }
 
     public function changeStatus($statusId): void
