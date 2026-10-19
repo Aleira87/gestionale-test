@@ -2,9 +2,10 @@
 
 namespace App\Filament\Resources\Tickets;
 
-use App\Models\Ticket;
 use App\Models\Technician;
+use App\Models\Ticket;
 use daacreators\CreatorsTicketing\Filament\Resources\Tickets\TicketResource as BaseTicketResource;
+use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Components\Section;
@@ -67,6 +68,17 @@ class TicketResource extends BaseTicketResource
                     })
                     ->searchable()
                     ->disabled(fn (Get $get): bool => ! $get('supplier_id')),
+                DateTimePicker::make('opened_at')
+                    ->label('Data apertura')
+                    ->seconds(false),
+
+                DateTimePicker::make('on_site_at')
+                    ->label('Data On Site')
+                    ->seconds(false),
+
+                DateTimePicker::make('closed_at')
+                    ->label('Data chiusura')
+                    ->seconds(false),
             ])
             ->columns(2);
 
