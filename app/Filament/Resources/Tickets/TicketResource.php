@@ -83,7 +83,8 @@ class TicketResource extends BaseTicketResource
                     ->afterOrEqual('opened_at')
                     ->afterOrEqual('on_site_at'),
             ])
-            ->columns(2);
+            ->columns(2)
+            ->columnSpanFull();
 
         // Restituiamo lo schema completo.
         return $schema->components($components);

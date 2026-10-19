@@ -6,6 +6,7 @@ use App\Filament\Resources\Tickets\TicketResource;
 use App\Models\Supplier;
 use App\Models\Technician;
 use daacreators\CreatorsTicketing\Filament\Resources\Tickets\Pages\ViewTicket as BaseViewTicket;
+use daacreators\CreatorsTicketing\Models\TicketStatus;
 use Filament\Actions\Action;
 use Filament\Facades\Filament;
 use Filament\Forms\Components\DateTimePicker;
@@ -15,6 +16,7 @@ use Filament\Notifications\Notification;
 use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Components\Utilities\Set;
 use Illuminate\Validation\Rule;
+use Illuminate\Validation\ValidationException;
 
 class ViewTicket extends BaseViewTicket
 {
@@ -29,8 +31,7 @@ class ViewTicket extends BaseViewTicket
                 ->label('Modifica dati gestionali')
                 ->icon('heroicon-o-pencil-square')
                 ->color('primary')
-                ->visible(fn (): bool =>
-                    Filament::auth()->user()?->hasRole('super_admin') ?? false
+                ->visible(fn (): bool => Filament::auth()->user()?->hasRole('super_admin') ?? false
                 )
                 ->fillForm(fn (): array => [
                     'primario' => $this->record->primario,
@@ -57,11 +58,10 @@ class ViewTicket extends BaseViewTicket
 
                     Select::make('supplier_id')
                         ->label('Fornitore')
-                        ->options(fn (): array =>
-                            Supplier::query()
-                                ->orderBy('name')
-                                ->pluck('name', 'id')
-                                ->all()
+                        ->options(fn (): array => Supplier::query()
+                            ->orderBy('name')
+                            ->pluck('name', 'id')
+                            ->all()
                         )
                         ->searchable()
                         ->live()
@@ -85,8 +85,7 @@ class ViewTicket extends BaseViewTicket
                                 ->all();
                         })
                         ->searchable()
-                        ->disabled(fn (Get $get): bool =>
-                            ! $get('supplier_id')
+                        ->disabled(fn (Get $get): bool => ! $get('supplier_id')
                         ),
 
                     DateTimePicker::make('opened_at')
@@ -122,5 +121,32 @@ class ViewTicket extends BaseViewTicket
                         ->send();
                 }),
         ];
+    }
+
+    public function changeStatus($statusId): void
+    {
+        $status = TicketStatus::find($statusId);
+
+        if ($status?->is_closing_status && ! $this->record->closed_at) {
+            Notification::make()
+                ->title('Impossibile chiudere il ticket')
+                ->body('Inserisci prima la Data chiusura tramite Modifica dati gestionali.')
+                ->danger()
+                ->send();
+
+            return;
+        }
+
+        try {
+            parent::changeStatus($statusId);
+
+        } catch (ValidationException $exception) {
+            Notification::make()
+                ->title('Cambio stato non consentito')
+                ->body(collect($exception->errors())->flatten()->first()
+                    ?? 'Verifica i dati del ticket.')
+                ->danger()
+                ->send();
+        }
     }
 }
