@@ -93,7 +93,15 @@ class TicketObserver
                 'closed_at' => 'La data di chiusura è obbligatoria per chiudere il ticket.',
             ]);
         }
-        if ($ticket->supplier_id && $ticket->technician_id) {
+        // 5. Verifica la coerenza tra Fornitore e Tecnico.
+        if ($ticket->technician_id) {
+
+            if (! $ticket->supplier_id) {
+                throw ValidationException::withMessages([
+                    'supplier_id' => 'Seleziona un fornitore prima di assegnare un tecnico.',
+                ]);
+            }
+
             $technicianBelongsToSupplier = Technician::query()
                 ->whereKey($ticket->technician_id)
                 ->where('supplier_id', $ticket->supplier_id)
