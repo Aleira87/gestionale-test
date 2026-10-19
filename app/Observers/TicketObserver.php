@@ -58,14 +58,27 @@ class TicketObserver
             }
         }
 
-        // 3. Quando viene inserita On Site, imposta In Progress.
-        if ($ticket->on_site_at && $ticket->isDirty('on_site_at')) {
-            $inProgressId = TicketStatus::query()
-                ->where('slug', 'in-progress')
-                ->value('id');
+        // 3. Quando viene inserita On Site, imposta In Progress
+        // soltanto se lo stato non è stato modificato esplicitamente.
 
-            if ($inProgressId) {
-                $ticket->ticket_status_id = $inProgressId;
+        if ($ticket->on_site_at && $ticket->isDirty('on_site_at')) {
+
+            $statusWasChanged = $ticket->isDirty('ticket_status_id');
+
+            $currentStatusIsDefault = TicketStatus::query()
+                ->whereKey($ticket->ticket_status_id)
+                ->where('is_default_for_new', true)
+                ->exists();
+
+            if (! $statusWasChanged && $currentStatusIsDefault) {
+
+                $inProgressId = TicketStatus::query()
+                    ->where('slug', 'in-progress')
+                    ->value('id');
+
+                if ($inProgressId) {
+                    $ticket->ticket_status_id = $inProgressId;
+                }
             }
         }
 
