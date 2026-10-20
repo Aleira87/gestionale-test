@@ -44,7 +44,10 @@ class TicketResource extends BaseTicketResource
                     ->rules([
                         fn (Get $get, ?Model $record) => Rule::unique('ct_tickets', 'secondario')
                             ->where('primario', $get('primario'))
-                            ->ignore($record?->getKey()),
+                            ->ignore($record?->getKey())
+                            ->validationMessages([
+                                'unique' => 'La combinazione di Primario e Secondario è già presente in un altro ticket.',
+                            ]),
                     ]),
                 Select::make('supplier_id')
                     ->label('Fornitore')
