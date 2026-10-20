@@ -78,7 +78,7 @@ class TicketResource extends BaseTicketResource
                 DateTimePicker::make('opened_at')
                     ->label('Data apertura')
                     ->seconds(false)
-                    ->placeholder(now()),
+                    ->default(now()),
 
                 DateTimePicker::make('on_site_at')
                     ->label('Data On Site')
