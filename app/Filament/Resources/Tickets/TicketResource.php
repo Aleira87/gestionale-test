@@ -77,7 +77,8 @@ class TicketResource extends BaseTicketResource
                     ->disabled(fn (Get $get): bool => ! $get('supplier_id')),
                 DateTimePicker::make('opened_at')
                     ->label('Data apertura')
-                    ->seconds(false),
+                    ->seconds(false)
+                    ->placeholder(now()),
 
                 DateTimePicker::make('on_site_at')
                     ->label('Data On Site')
