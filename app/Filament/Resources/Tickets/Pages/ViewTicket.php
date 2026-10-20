@@ -12,16 +12,16 @@ use Filament\Facades\Filament;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
-use Filament\Notifications\Notification;
-use Filament\Schemas\Components\Utilities\Get;
-use Filament\Schemas\Components\Utilities\Set;
-use Illuminate\Validation\Rule;
-use Illuminate\Validation\ValidationException;
 use Filament\Infolists\Components\TextEntry;
+use Filament\Notifications\Notification;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Components\Tabs;
 use Filament\Schemas\Components\Tabs\Tab;
+use Filament\Schemas\Components\Utilities\Get;
+use Filament\Schemas\Components\Utilities\Set;
 use Filament\Schemas\Schema;
+use Illuminate\Validation\Rule;
+use Illuminate\Validation\ValidationException;
 
 class ViewTicket extends BaseViewTicket
 {
@@ -59,6 +59,9 @@ class ViewTicket extends BaseViewTicket
                             fn (Get $get) => Rule::unique('ct_tickets', 'secondario')
                                 ->where('primario', $get('primario'))
                                 ->ignore($this->record->getKey()),
+                        ])
+                        ->validationMessages([
+                            'unique' => 'La combinazione di Primario e Secondario è già presente in un altro ticket.',
                         ]),
 
                     Select::make('supplier_id')
