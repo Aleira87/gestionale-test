@@ -50,11 +50,13 @@ class ViewTicket extends BaseViewTicket
                 ->schema([
                     TextInput::make('primario')
                         ->label('Primario')
-                        ->maxLength(255),
+                        ->maxLength(255)
+                        ->required(),
 
                     TextInput::make('secondario')
                         ->label('Secondario')
                         ->maxLength(255)
+                        ->required()
                         ->rules([
                             fn (Get $get) => Rule::unique('ct_tickets', 'secondario')
                                 ->where('primario', $get('primario'))
@@ -73,6 +75,7 @@ class ViewTicket extends BaseViewTicket
                         )
                         ->searchable()
                         ->live()
+                        ->required(fn (Get $get): bool => filled($get('on_site_at')))
                         ->afterStateUpdated(
                             fn (Set $set) => $set('technician_id', null)
                         ),
@@ -98,7 +101,10 @@ class ViewTicket extends BaseViewTicket
 
                     DateTimePicker::make('opened_at')
                         ->label('Data apertura')
-                        ->seconds(false),
+                        ->seconds(false)
+                        ->default(fn () => now())
+                        ->maxDate(fn () => now())
+                        ->required(),
 
                     DateTimePicker::make('on_site_at')
                         ->label('Data On Site')
