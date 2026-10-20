@@ -36,11 +36,13 @@ class TicketResource extends BaseTicketResource
             ->schema([
                 TextInput::make('primario')
                     ->label('Primario')
-                    ->maxLength(255),
+                    ->maxLength(255)
+                    ->required(),
 
                 TextInput::make('secondario')
                     ->label('Secondario')
                     ->maxLength(255)
+                    ->required()
                     ->rules([
                         fn (Get $get, ?Model $record) => Rule::unique('ct_tickets', 'secondario')
                             ->where('primario', $get('primario'))
@@ -55,6 +57,7 @@ class TicketResource extends BaseTicketResource
                     ->searchable()
                     ->preload()
                     ->live()
+                    ->required(fn (Get $get): bool => filled($get('on_site_at')))
                     ->afterStateUpdated(function (Set $set) {
                         $set('technician_id', null);
                     }),
@@ -78,7 +81,8 @@ class TicketResource extends BaseTicketResource
                 DateTimePicker::make('opened_at')
                     ->label('Data apertura')
                     ->seconds(false)
-                    ->default(now()),
+                    ->default(now())
+                    ->required(),
 
                 DateTimePicker::make('on_site_at')
                     ->label('Data On Site')
