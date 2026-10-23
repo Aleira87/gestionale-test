@@ -13,6 +13,7 @@
         "laravel/fortify": "^1.41",
         "laravel/framework": "^13.17",
         "laravel/tinker": "^3.0",
+        "matondojk/filament-social-login": "^1.0",
         "occtherapist/advanced-table-export-for-filament": "^1.2",
         "relaticle/flowforge": "^4.1",
         "spatie/laravel-permission": "^8.3",
